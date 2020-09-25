@@ -1,10 +1,14 @@
-#yudin
+#  yudin
 import requests
 import json
-from datetime import *; from dateutil.relativedelta import *
+import matplotlib.pyplot as plt
+from datetime import *
+from dateutil.relativedelta import *
 import calendar
 
-# url = https://api.tiingo.com/tiingo/daily/MSFT/prices + ?date=2020-05-20&token=f8e0228db0b5122cf7f09c0f4a74a8f017a8db5c
+'''url = https://api.tiingo.com/tiingo/daily/MSFT/prices 
++ ?date=2020-05-20&token=f8e0228db0b5122cf7f09c0f4a74a8f017a8db5c
+'''
 
 TODAY = date.today()
 nowaday = TODAY - relativedelta(days=1)
@@ -18,7 +22,7 @@ def get_stock_data(ticker, period):
     return round(historical_price, 2), round(current_price, 2), formatted_price_change
 
 
-def get_historical_date_by_period(period): #period is yy-m-d
+def get_historical_date_by_period(period): #  period is yy-m-d
     period = period.split('-')
     y = int(period[0])
     mo = int(period[1])
@@ -29,7 +33,7 @@ def get_historical_date_by_period(period): #period is yy-m-d
 
 def get_stock_price_by_date(ticker, mydate):
     url = 'https://api.tiingo.com/tiingo/daily/{ticker}/prices?startDate={mydate}&token=f8e0228db0b5122cf7f09c0f4a74a8f017a8db5c'.format(ticker=ticker, mydate=mydate)
-    # getting url with variable date and ticker
+    #  getting url with variable date and ticker
     tickerdata = requests.get(url)
     close_cost = tickerdata.json()[0]['adjClose']  # close cost of the stock
     return close_cost
@@ -44,5 +48,16 @@ def get_formatted_price_change_string(price_change):
     formatted_price_change = price_change*100
     return round(formatted_price_change, 2)
 
+def draw(ticker):
+    prices = []
+    dates = []
+    for i in range(1,29):
+        date = datetime(2020, 8, i)
+        prices.append(get_stock_price_by_date(ticker, date))
+        dates.append(date)
+    plt.plot(dates,prices)
+    plt.show()
+
 
 print(get_stock_data('AAPL', '0-3-2'))
+#draw('AAPL')
